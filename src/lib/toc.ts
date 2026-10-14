@@ -18,12 +18,30 @@ export function extractToc(source: string): TocItem[] {
   const items: TocItem[] = [];
 
   for (const line of lines) {
-    const match = /^(##|###)\s+(.*)$/.exec(line.trim());
-    if (!match) continue;
+    const trimmed = line.trim();
+    const mdMatch = /^(##|###)\s+(.*)$/.exec(trimmed);
+    if (mdMatch) {
+      const depth = mdMatch[1].length === 2 ? 2 : 3;
+      let text = mdMatch[2].trim();
+      let id = slugifyHeading(text);
+      // Check for markdown anchor syntax e.g. ## Heading {#custom-id}
+      const anchorMatch = /^(.*?)\s*\{#([a-zA-Z0-9_-]+)\}\s*$/.exec(text);
+      if (anchorMatch) {
+        text = anchorMatch[1].trim();
+        id = anchorMatch[2].trim();
+      }
+      items.push({ id, text, depth });
+      continue;
+    }
 
-    const depth = match[1].length === 2 ? 2 : 3;
-    const text = match[2].trim();
-    items.push({ id: slugifyHeading(text), text, depth });
+    const htmlMatch = /^<(h2|h3)(?:\s+id=["']([^"']+)["'])?[^>]*>(.*?)<\/\1>$/i.exec(trimmed);
+    if (htmlMatch) {
+      const depth = htmlMatch[1].toLowerCase() === "h2" ? 2 : 3;
+      const explicitId = htmlMatch[2];
+      const text = htmlMatch[3].replace(/<[^>]+>/g, "").trim();
+      const id = explicitId || slugifyHeading(text);
+      items.push({ id, text, depth });
+    }
   }
 
   return items;

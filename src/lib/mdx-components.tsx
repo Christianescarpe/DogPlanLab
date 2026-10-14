@@ -10,6 +10,7 @@ import { InlineCTA } from "@/components/article/InlineCTA";
 import { AnswerFirstSummary } from "@/components/article/AnswerFirstSummary";
 import { ProductPick } from "@/components/shop/ProductPick";
 import { RetailerCTA } from "@/components/shop/RetailerCTA";
+import { StarterKitCTA } from "@/components/article/StarterKitCTA";
 
 function textContent(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -21,13 +22,13 @@ function textContent(node: ReactNode): string {
 }
 
 export const mdxComponents: MDXComponents = {
-  h2: ({ children, ...props }) => (
-    <h2 id={slugifyHeading(textContent(children))} className="font-display text-2xl font-semibold text-ink" {...props}>
+  h2: ({ children, id, ...props }) => (
+    <h2 id={id || slugifyHeading(textContent(children))} className="font-display text-2xl font-semibold text-ink" {...props}>
       {children}
     </h2>
   ),
-  h3: ({ children, ...props }) => (
-    <h3 id={slugifyHeading(textContent(children))} className="font-display text-xl font-semibold text-ink" {...props}>
+  h3: ({ children, id, ...props }) => (
+    <h3 id={id || slugifyHeading(textContent(children))} className="font-display text-xl font-semibold text-ink" {...props}>
       {children}
     </h3>
   ),
@@ -78,4 +79,5 @@ export const mdxComponents: MDXComponents = {
   InlineCTA,
   ProductPick,
   RetailerCTA,
+  StarterKitCTA,
 };

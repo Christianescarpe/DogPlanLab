@@ -12,7 +12,10 @@ export type AnalyticsEvent =
   | { name: "puppy_plan_email_submitted"; signupSource: string }
   | { name: "cta_clicked"; ctaId: string; location: string }
   | { name: "article_viewed"; slug: string; category: string }
-  | { name: "related_article_clicked"; fromSlug: string; toSlug: string };
+  | { name: "related_article_clicked"; fromSlug: string; toSlug: string }
+  | { name: "starter_kit_cta_viewed"; page: string; placement: "primary" | "secondary" }
+  | { name: "starter_kit_cta_clicked"; page: string; placement: "primary" | "secondary" }
+  | { name: "starter_kit_submitted"; page: string; placement: "primary" | "secondary"; puppyAge?: string };
 
 function dispatch(event: AnalyticsEvent) {
   // Real provider integration goes here, e.g.:
